@@ -1,21 +1,25 @@
 import Image from 'next/image';
 
-export default function UserCard () {
+
+export default function UserCard ({user}: {user:any})  {
     return (
     <div className="w-full rounded shadow-lg bg-white">
         <Image priority className="w-full" width="200" height="200" src="/img/person.svg" alt="Profile Image" />
 
-        <div className="px-6 py-4">
+        <div className="px-6 py-6">
         <div className="font-bold text-xl mb-2">
-            John Doe
+            {user.firstname} {user.lastname}
         </div>
 
         <p className="text-gray-700 text-base mb-2">
-            Email: john.doe@example.com
+            {user.email}
         </p>
 
         <p className="text-gray-700 text-base mb-2">
-            Phone: +1 (555) 123-4567
+            {user.phone}
+        </p>
+        <p className="text-gray-700 text-base mb-2">
+            {user.gender}
         </p>
 
         <div className="flex flex-wrap gap-2">

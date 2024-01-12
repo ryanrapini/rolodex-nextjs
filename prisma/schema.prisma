@@ -16,15 +16,20 @@ model Contact {
   lastname       String
   phone          String?
   email          String?
+  height         String?
+  gender         String?
   owner          User?            @relation(fields: [ownerId], references: [id])
   ownerId        String?
   TagsOnContacts TagsOnContacts[]
+
+  @@map(name: "contacts")
 }
 
 model User {
   id        String    @id @default(cuid())
-  name      String?
-  email     String?   @unique
+  name      String
+  password  String
+  email     String    @unique
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @updatedAt @map(name: "updated_at")
   Contact   Contact[]
@@ -36,6 +41,8 @@ model Tag {
   id             String           @id @default(cuid())
   name           String
   TagsOnContacts TagsOnContacts[]
+
+  @@map(name: "tags")
 }
 
 model TagsOnContacts {
@@ -47,4 +54,5 @@ model TagsOnContacts {
   assignedBy String
 
   @@id([contactId, tagId])
+  @@map(name: "tags_contacts")
 }
