@@ -1,0 +1,50 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Contact {
+  id             String           @id @default(cuid())
+  firstname      String
+  lastname       String
+  phone          String?
+  email          String?
+  owner          User?            @relation(fields: [ownerId], references: [id])
+  ownerId        String?
+  TagsOnContacts TagsOnContacts[]
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String?   @unique
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt @map(name: "updated_at")
+  Contact   Contact[]
+
+  @@map(name: "users")
+}
+
+model Tag {
+  id             String           @id @default(cuid())
+  name           String
+  TagsOnContacts TagsOnContacts[]
+}
+
+model TagsOnContacts {
+  contact    Contact  @relation(fields: [contactId], references: [id])
+  contactId  String // relation scalar field (used in the `@relation` attribute above)
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      String // relation scalar field (used in the `@relation` attribute above)
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([contactId, tagId])
+}
